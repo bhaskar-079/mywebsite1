@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mediadesign CIMS</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link href="style.css" rel="stylesheet"/></head>
+<body class="bg-gray-50 min-h-screen">
+<!-- Header -->
+<header class="bg-white shadow-sm border-b-2 border-blue-500">
+<div class="container mx-auto px-4 py-3">
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-3">
+<img alt="Mediadesign CIMS Logo" class="h-10w-auto" src="your-logo.png"/>
+<h1 class="text-xl font-semibold text-gray-900">Mediadesign CIMS</h1>
+</div>
+<div class="flex items-center space-x-4">
+<div class="text-sm text-gray-600" id="userInfo"></div>
+<button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors" id="loginBtn">
+<i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+<button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors hidden" id="logoutBtn">
+<i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Container -->
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="w-64 bg-white shadow-lg">
+<nav class="p-4">
+<div class="space-y-2">
+<div class="sidebar-item p-3 rounded-lg cursor-pointer active-tab" data-tab="dashboard">
+<i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+                    </div>
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="departments">
+<i class="fas fa-building mr-3"></i>Departments
+                    </div>
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="faculty">
+<i class="fas fa-users mr-3"></i>Faculty &amp; Staff
+                    </div>
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="courses">
+<i class="fas fa-book mr-3"></i>Courses
+                    </div>
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="announcements">
+<i class="fas fa-bullhorn mr-3"></i>Announcements
+                    </div>
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="maps">
+<i class="fas fa-map mr-3"></i>Campus Maps
+                    </div>
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="resources">
+<i class="fas fa-download mr-3"></i>Resources
+                    </div>
+<div class="hidden" id="adminMenu">
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="users">
+<i class="fas fa-user-cog mr-3"></i>User Management
+                        </div>
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="analytics">
+<i class="fas fa-chart-bar mr-3"></i>Analytics
+                        </div>
+<div class="sidebar-item p-3 rounded-lg cursor-pointer" data-tab="settings">
+<i class="fas fa-cog mr-3"></i>System Settings
+                        </div>
+</div>
+</div>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6">
+<!-- Search Bar -->
+<div class="mb-6">
+<div class="relative">
+<input class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="globalSearch" placeholder="Search departments, faculty, courses..." type="text"/>
+<i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+</div>
+<div class="hidden mt-2 bg-white border border-gray-300 rounded-lg shadow-lg" id="searchResults"></div>
+</div>
+<!-- Dashboard Tab -->
+<div class="tab-content" id="tab-dashboard">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="flex items-center">
+<div class="flex-shrink-0">
+<i class="fas fa-building text-3xl text-blue-600"></i>
+</div>
+<div class="ml-4">
+<h3 class="text-lg font-semibold text-gray-900">Departments</h3>
+<p class="text-2xl font-bold text-blue-600" id="deptCount">6</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="flex items-center">
+<div class="flex-shrink-0">
+<i class="fas fa-users text-3xl text-green-600"></i>
+</div>
+<div class="ml-4">
+<h3 class="text-lg font-semibold text-gray-900">Faculty</h3>
+<p class="text-2xl font-bold text-green-600" id="facultyCount">24</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="flex items-center">
+<div class="flex-shrink-0">
+<i class="fas fa-book text-3xl text-purple-600"></i>
+</div>
+<div class="ml-4">
+<h3 class="text-lg font-semibold text-gray-900">Courses</h3>
+<p class="text-2xl font-bold text-purple-600" id="courseCount">87</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="flex items-center">
+<div class="flex-shrink-0">
+<i class="fas fa-bullhorn text-3xl text-red-600"></i>
+</div>
+<div class="ml-4">
+<h3 class="text-lg font-semibold text-gray-900">Announcements</h3>
+<p class="text-2xl font-bold text-red-600" id="announcementCount">12</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-white p-6 rounded-lg shadow-md">
+<h3 class="text-lg font-semibold mb-4">Recent Announcements</h3>
+<div class="space-y-3" id="recentAnnouncements"></div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+<div class="space-y-3">
+<button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors" onclick="switchTab('departments')">
+<i class="fas fa-plus-circle text-blue-600 mr-3"></i>Add New Department
+                            </button>
+<button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors" onclick="switchTab('faculty')">
+<i class="fas fa-user-plus text-green-600 mr-3"></i>Add New Faculty
+                            </button>
+<button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors" onclick="switchTab('courses')">
+<i class="fas fa-book-open text-purple-600 mr-3"></i>Add New Course
+                            </button>
+<button class="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors" onclick="switchTab('announcements')">
+<i class="fas fa-megaphone text-red-600 mr-3"></i>Create Announcement
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Departments Tab -->
+<div class="tab-content hidden" id="tab-departments">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900">Departments</h2>
+<button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors" id="addDeptBtn">
+<i class="fas fa-plus mr-2"></i>Add Department
+                    </button>
+</div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+<div class="p-6">
+<div class="mb-4">
+<input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="deptSearch" placeholder="Search departments..." type="text"/>
+</div>
+<div class="space-y-4" id="departmentsList"></div>
+</div>
+</div>
+</div>
+<!-- Faculty Tab -->
+<div class="tab-content hidden" id="tab-faculty">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900">Faculty &amp; Staff</h2>
+<button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors" id="addFacultyBtn">
+<i class="fas fa-plus mr-2"></i>Add Faculty
+                    </button>
+</div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+<div class="p-6">
+<div class="mb-4 flex space-x-4">
+<input class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" id="facultySearch" placeholder="Search faculty..." type="text"/>
+<select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" id="facultyFilter">
+<option value="">All Departments</option>
+</select>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="facultyList"></div>
+</div>
+</div>
+</div>
+<!-- Courses Tab -->
+<div class="tab-content hidden" id="tab-courses">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900">Courses</h2>
+<button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors" id="addCourseBtn">
+<i class="fas fa-plus mr-2"></i>Add Course
+                    </button>
+</div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+<div class="p-6">
+<div class="mb-4 flex space-x-4">
+<input class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" id="courseSearch" placeholder="Search courses..." type="text"/>
+<select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" id="courseFilter">
+<option value="">All Departments</option>
+</select>
+</div>
+<div class="space-y-4" id="coursesList"></div>
+</div>
+</div>
+</div>
+<!-- Announcements Tab -->
+<div class="tab-content hidden" id="tab-announcements">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900">Announcements</h2>
+<button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors" id="addAnnouncementBtn">
+<i class="fas fa-plus mr-2"></i>Create Announcement
+                    </button>
+</div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+<div class="p-6">
+<div class="space-y-6" id="announcementsList"></div>
+</div>
+</div>
+</div>
+<!-- Campus Maps Tab -->
+<div class="tab-content hidden" id="tab-maps">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900">Campus Maps &amp; Navigation</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="bg-white rounded-lg shadow-md p-6">
+<h3 class="text-lg font-semibold mb-4">Campus Buildings</h3>
+<div class="space-y-4" id="buildingList"></div>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6">
+<h3 class="text-lg font-semibold mb-4">Interactive Map</h3>
+<div class="bg-gray-200 h-64 rounded-lg flex items-center justify-center">
+<div class="text-center">
+<i class="fas fa-map text-4xl text-gray-400 mb-2"></i>
+<p class="text-gray-600">Interactive Campus Map</p>
+<p class="text-sm text-gray-500">Click on buildings for details</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Resources Tab -->
+<div class="tab-content hidden" id="tab-resources">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900">Downloadable Resources</h2>
+<button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors" id="addResourceBtn">
+<i class="fas fa-plus mr-2"></i>Add Resource
+                    </button>
+</div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+<div class="p-6">
+<div class="mb-4">
+<input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" id="resourceSearch" placeholder="Search resources..." type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="resourcesList"></div>
+</div>
+</div>
+</div>
+<!-- User Management Tab -->
+<div class="tab-content hidden" id="tab-users">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900">User Management</h2>
+<button class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors" id="addUserBtn">
+<i class="fas fa-plus mr-2"></i>Add User
+                    </button>
+</div>
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+<div class="p-6">
+<div class="mb-4">
+<input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500" id="userSearch" placeholder="Search users..." type="text"/>
+</div>
+<div class="space-y-4" id="usersList"></div>
+</div>
+</div>
+</div>
+<!-- Analytics Tab -->
+<div class="tab-content hidden" id="tab-analytics">
+<h2 class="text-2xl font-bold text-gray-900 mb-6">System Analytics</h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+<div class="bg-white p-6 rounded-lg shadow-md">
+<h3 class="text-lg font-semibold mb-4">User Activity</h3>
+<canvas id="userActivityChart" style="height: 300px;"></canvas>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<h3 class="text-lg font-semibold mb-4">Content Statistics</h3>
+<canvas id="contentStatsChart" style="height: 300px;"></canvas>
+</div>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6">
+<h3 class="text-lg font-semibold mb-4">Recent System Activity</h3>
+<div class="space-y-3" id="systemActivity"></div>
+</div>
+</div>
+<!-- System Settings Tab -->
+<div class="tab-content hidden" id="tab-settings">
+<h2 class="text-2xl font-bold text-gray-900 mb-6">System Settings</h2>
+<div class="space-y-6">
+<div class="bg-white p-6 rounded-lg shadow-md">
+<h3 class="text-lg font-semibold mb-4">General Settings</h3>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Campus Name</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="campusName" type="text" value="University of Excellence"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="academicYear" type="text" value="2024-2025"/>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<h3 class="text-lg font-semibold mb-4">Security Settings</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-gray-700">Multi-Factor Authentication</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-gray-700">Password Complexity</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+</label>
+</div>
+</div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<h3 class="text-lg font-semibold mb-4">Backup &amp; Recovery</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-gray-700">Automatic Backups</p>
+<p class="text-xs text-gray-500">Last backup: Today at 3:00 AM</p>
+</div>
+<button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                    Backup Now
+                                </button>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-gray-700">Export Data</p>
+<p class="text-xs text-gray-500">Download system data as JSON</p>
+</div>
+<button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors" id="exportDataBtn">
+                                    Export
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Login Modal -->
+<div class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center" id="loginModal">
+<div class="bg-white rounded-lg p-8 w-96 max-w-md mx-4">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900">Login</h2>
+<button class="text-gray-400 hover:text-gray-600" id="closeLoginModal">
+<i class="fas fa-times text-xl"></i>
+</button>
+</div>
+<form id="loginForm">
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="username" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="password" required="" type="password"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="role">
+<option value="guest">Guest</option>
+<option value="student">Student</option>
+<option value="faculty">Faculty</option>
+<option value="admin">Administrator</option>
+</select>
+</div>
+</div>
+<div class="mt-6 space-y-3">
+<button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors" type="submit">
+                        Login
+                    </button>
+</div>
+</form>
+<div class="mt-4 p-3 bg-gray-100 rounded-lg">
+</div>
+</div>
+</div>
+<!-- Department Modal -->
+<div class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center" id="departmentModal">
+<div class="bg-white rounded-lg p-8 w-96 max-w-md mx-4">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900" id="deptModalTitle">Add Department</h2>
+<button class="text-gray-400 hover:text-gray-600" id="closeDeptModal">
+<i class="fas fa-times text-xl"></i>
+</button>
+</div>
+<form id="departmentForm">
+<input id="deptId" type="hidden"/>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Department Name</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="deptName" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+<textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="deptDescription" rows="3"></textarea>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Building</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="deptBuilding" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Contact</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" id="deptContact" type="text"/>
+</div>
+</div>
+<div class="mt-6 flex space-x-3">
+<button class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors" type="submit">
+                        Save
+                    </button>
+<button class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors" id="cancelDept" type="button">
+                        Cancel
+                    </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Faculty Modal -->
+<div class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center" id="facultyModal">
+<div class="bg-white rounded-lg p-8 w-96 max-w-md mx-4">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900" id="facultyModalTitle">Add Faculty</h2>
+<button class="text-gray-400 hover:text-gray-600" id="closeFacultyModal">
+<i class="fas fa-times text-xl"></i>
+</button>
+</div>
+<form id="facultyForm">
+<input id="facultyId" type="hidden"/>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" id="facultyName" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" id="facultyTitle" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" id="facultyDepartment">
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" id="facultyEmail" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" id="facultyPhone" type="tel"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Office</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" id="facultyOffice" type="text"/>
+</div>
+</div>
+<div class="mt-6 flex space-x-3">
+<button class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors" type="submit">
+                        Save
+                    </button>
+<button class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors" id="cancelFaculty" type="button">
+                        Cancel
+                    </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Course Modal -->
+<div class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center" id="courseModal">
+<div class="bg-white rounded-lg p-8 w-96 max-w-md mx-4">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900" id="courseModalTitle">Add Course</h2>
+<button class="text-gray-400 hover:text-gray-600" id="closeCourseModal">
+<i class="fas fa-times text-xl"></i>
+</button>
+</div>
+<form id="courseForm">
+<input id="courseId" type="hidden"/>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Course Code</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" id="courseCode" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Course Name</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" id="courseName" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" id="courseDepartment">
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Credits</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" id="courseCredits" max="6" min="1" type="number"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Instructor</label>
+<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" id="courseInstructor">
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Schedule</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" id="courseSchedule" placeholder="e.g., MWF 10:00-11:00" type="text"/>
+</div>
+</div>
+<div class="mt-6 flex space-x-3">
+<button class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors" type="submit">
+                        Save
+                    </button>
+<button class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors" id="cancelCourse" type="button">
+                        Cancel
+                    </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Announcement Modal -->
+<div class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center" id="announcementModal">
+<div class="bg-white rounded-lg p-8 w-96 max-w-md mx-4">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900" id="announcementModalTitle">Create Announcement</h2>
+<button class="text-gray-400 hover:text-gray-600" id="closeAnnouncementModal">
+<i class="fas fa-times text-xl"></i>
+</button>
+</div>
+<form id="announcementForm">
+<input id="announcementId" type="hidden"/>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" id="announcementTitle" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Content</label>
+<textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" id="announcementContent" required="" rows="4"></textarea>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" id="announcementPriority">
+<option value="low">Low</option>
+<option value="medium">Medium</option>
+<option value="high">High</option>
+<option value="urgent">Urgent</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Target Audience</label>
+<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" id="announcementAudience">
+<option value="all">All Users</option>
+<option value="students">Students Only</option>
+<option value="faculty">Faculty Only</option>
+<option value="staff">Staff Only</option>
+</select>
+</div>
+</div>
+<div class="mt-6 flex space-x-3">
+<button class="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors" type="submit">
+                        Publish
+                    </button>
+<button class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors" id="cancelAnnouncement" type="button">
+                        Cancel
+                    </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Resource Modal -->
+<div class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center" id="resourceModal">
+<div class="bg-white rounded-lg p-8 w-96 max-w-md mx-4">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900" id="resourceModalTitle">Add Resource</h2>
+<button class="text-gray-400 hover:text-gray-600" id="closeResourceModal">
+<i class="fas fa-times text-xl"></i>
+</button>
+</div>
+<form id="resourceForm">
+<input id="resourceId" type="hidden"/>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Resource Name</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" id="resourceName" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+<textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" id="resourceDescription" rows="3"></textarea>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" id="resourceCategory">
+<option value="academic">Academic</option>
+<option value="forms">Forms</option>
+<option value="maps">Maps</option>
+<option value="guides">Guides</option>
+<option value="policies">Policies</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">File</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" id="resourceFile" type="file"/>
+</div>
+</div>
+<div class="mt-6 flex space-x-3">
+<button class="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors" type="submit">
+                        Save
+                    </button>
+<button class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors" id="cancelResource" type="button">
+                        Cancel
+                    </button>
+</div>
+</form>
+</div>
+</div>
+<!-- User Modal -->
+<div class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center" id="userModal">
+<div class="bg-white rounded-lg p-8 w-96 max-w-md mx-4">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-900" id="userModalTitle">Add User</h2>
+<button class="text-gray-400 hover:text-gray-600" id="closeUserModal">
+<i class="fas fa-times text-xl"></i>
+</button>
+</div>
+<form id="userForm">
+<input id="userId" type="hidden"/>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500" id="userUsername" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500" id="userFullName" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500" id="userEmail" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+<select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500" id="userRole">
+<option value="student">Student</option>
+<option value="faculty">Faculty</option>
+<option value="admin">Administrator</option>
+<option value="it">IT Support</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+<input class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500" id="userPassword" required="" type="password"/>
+</div>
+</div>
+<div class="mt-6 flex space-x-3">
+<button class="flex-1 bg-yellow-600 text-white py-2 rounded-lg hover:bg-yellow-700 transition-colors" type="submit">
+                        Save
+                    </button>
+<button class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition-colors" id="cancelUser" type="button">
+                        Cancel
+                    </button>
+</div>
+</form>
+</div>
+</div>
+
+<script src="script.js"></script></body>
+</html>
