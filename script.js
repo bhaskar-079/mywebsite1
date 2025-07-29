@@ -63,7 +63,8 @@
                         { id: 1, username: 'admin', fullName: 'System Administrator', email: 'admin@university.edu', role: 'admin', password: 'admin123', active: true },
                         { id: 2, username: 'faculty', fullName: 'Faculty User', email: 'faculty@university.edu', role: 'faculty', password: 'faculty123', active: true },
                         { id: 3, username: 'student', fullName: 'Student User', email: 'student@university.edu', role: 'student', password: 'student123', active: true },
-                        { id: 4, username: 'itsupport', fullName: 'IT Support', email: 'it@university.edu', role: 'it', password: 'it123', active: true }
+                         { id: 4, username: 'bhaskar', fullName: 'Bhaskar yadav', email: 'bhaskar@university.edu', role: 'student', password: 'bhaskar123', active: true },
+                        {id: 5, username: 'prof.samih ', fullName: 'Samih ALareq', email: 'samihal@university.edu', role: 'faculty', password: 'samih123', active: true }
                     ];
                     localStorage.setItem('cims_users', JSON.stringify(sampleUsers));
                 }
